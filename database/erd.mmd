@@ -1,0 +1,53 @@
+erDiagram
+    USERS ||--o{ REGISTRATIONS : "makes"
+    EVENTS ||--o{ REGISTRATIONS : "receives"
+    USERS ||--o{ EVENTS : "creates (admin)"
+    CATEGORIES ||--o{ EVENTS : "classifies"
+    VENUES ||--o{ EVENTS : "hosts"
+
+    USERS {
+        int UserId PK
+        nvarchar Email UK "must end in @univ.edu.ph for students"
+        nvarchar FullName
+        char StudentNumber UK "2023-01234, NULL for admins"
+        varchar Program "BSIT, BSCS, BSIS, BSEMC"
+        varchar Role "Student or Admin"
+        datetime2 CreatedAt
+    }
+
+    CATEGORIES {
+        tinyint CategoryId PK
+        nvarchar Name UK
+    }
+
+    VENUES {
+        int VenueId PK
+        nvarchar Name UK
+        nvarchar Building
+        int MaxCapacity "1 to 20000"
+    }
+
+    EVENTS {
+        int EventId PK
+        tinyint CategoryId FK
+        int VenueId FK
+        int CreatedByUserId FK
+        nvarchar Title
+        nvarchar Description
+        datetimeoffset StartsAt
+        datetimeoffset EndsAt "after StartsAt"
+        datetimeoffset RegistrationClosesAt "on or before StartsAt"
+        int Capacity "1 to 20000"
+        varchar Status "Draft, Published, Cancelled, Completed"
+        datetime2 CreatedAt
+    }
+
+    REGISTRATIONS {
+        int RegistrationId PK
+        int EventId FK "UK with UserId"
+        int UserId FK
+        int SeatNumber "UK per event"
+        varchar RegistrationCode "KAL-1009-162"
+        varchar Status "Confirmed, Cancelled, Attended"
+        datetime2 RegisteredAt
+    }
