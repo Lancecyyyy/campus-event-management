@@ -35,7 +35,7 @@
 
 ### 5.1 Team Roster
 
-| Member   | Name | Assigned role | Primary responsibility |
+| Member | Name | Assigned role | Primary responsibility |
 | Member 1 | Afya Mae B. Angeles | Systems Architect & Prompt Lead | Task 1 (Requirements & Prompt Engineering), Task 5 (Documentation & Integration) |
 | Member 2 | Lance C. Camba | Frontend Engineer | Task 2 (AI-Assisted UI & WCAG Accessibility) |
 | Member 3 | Young Hoon R. Kim | Database & Backend Engineer | Task 3 (3NF Schema, Mermaid ERD, SQL Scripts) |
