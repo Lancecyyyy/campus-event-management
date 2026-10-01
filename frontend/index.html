@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kalendaryo — Campus Events</title>
+  <meta name="description" content="Browse upcoming campus events and register with your university email.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" id="top">
+      <!-- Decorative: the visible wordmark already names the site (WCAG H67) -->
+      <img src="assets/logo.svg" alt="" width="28" height="28">
+      <span>Kalendaryo</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-list">
+        <li><a href="#events">Events</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#attendees">Attendees</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- Hero: the next event, written on intermediate pad paper -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="pad" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="hero-when" id="hero-when">Next on campus</p>
+        <h1 id="hero-title">Campus events, one sheet at a time</h1>
+        <p class="hero-meta" id="hero-meta">Browse what’s on and save your seat with your university email.</p>
+        <a class="btn btn-ink" href="#register" id="hero-cta">Register for this event</a>
+      </div>
+      <p class="hero-date" aria-hidden="true">
+        <span class="hero-month" id="hero-month">Oct</span>
+        <span class="hero-day" id="hero-day">01</span>
+      </p>
+    </section>
+
+    <!-- Catalog + registration -->
+    <section id="events" class="catalog" aria-labelledby="events-title">
+      <div class="catalog-head">
+        <h2 id="events-title">Upcoming events</h2>
+        <div class="filters" role="group" aria-label="Filter events by category" id="filters">
+          <button type="button" class="chip" aria-pressed="true" data-category="All">All</button>
+          <!-- Category chips are added by app.js from the data -->
+        </div>
+      </div>
+
+      <div class="catalog-body">
+        <ol class="event-list" id="event-list" aria-label="Upcoming events, sorted by date"></ol>
+        <p class="empty" id="event-empty" hidden>No events in this category yet. Choose “All” to see everything on the calendar.</p>
+
+        <section id="register" class="register" aria-labelledby="register-title">
+          <h2 id="register-title">Save your seat</h2>
+          <p class="register-intro" id="form-hint">One seat per student per event. Use your university email so organizers can verify you at the door.</p>
+
+          <form id="register-form" class="form" novalidate aria-describedby="form-hint">
+            <div class="field">
+              <label for="event-select">Event</label>
+              <select id="event-select" name="eventId" aria-label="Event" aria-describedby="event-select-error" required></select>
+              <p class="field-error" id="event-select-error" data-error-for="eventId"></p>
+            </div>
+
+            <div class="field">
+              <label for="full-name">Full name</label>
+              <input id="full-name" name="fullName" type="text" autocomplete="name" maxlength="100"
+                     aria-label="Full name" aria-describedby="full-name-error" required>
+              <p class="field-error" id="full-name-error" data-error-for="fullName"></p>
+            </div>
+
+            <div class="field">
+              <label for="student-number">Student number</label>
+              <input id="student-number" name="studentNumber" type="text" inputmode="numeric" maxlength="10"
+                     placeholder="2023-01234" aria-label="Student number"
+                     aria-describedby="student-number-hint student-number-error" required>
+              <p class="field-hint" id="student-number-hint">Four-digit year, a hyphen, then five digits.</p>
+              <p class="field-error" id="student-number-error" data-error-for="studentNumber"></p>
+            </div>
+
+            <div class="field">
+              <label for="email">University email</label>
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="254"
+                     placeholder="juan.delacruz@univ.edu.ph" aria-label="University email"
+                     aria-describedby="email-hint email-error" required>
+              <p class="field-hint" id="email-hint">Must end in @univ.edu.ph.</p>
+              <p class="field-error" id="email-error" data-error-for="email"></p>
+            </div>
+
+            <div class="field">
+              <label for="program">Program <span class="optional">(optional)</span></label>
+              <select id="program" name="program" aria-label="Program (optional)">
+                <option value="">Prefer not to say</option>
+                <option value="BSIT">BS Information Technology</option>
+                <option value="BSCS">BS Computer Science</option>
+                <option value="BSIS">BS Information Systems</option>
+                <option value="BSEMC">BS Entertainment and Multimedia Computing</option>
+              </select>
+            </div>
+
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+
+            <button type="submit" class="btn btn-ink btn-block" id="submit-btn">Register</button>
+          </form>
+
+          <!-- Lives outside the form so it is still announced after the form is hidden -->
+          <p class="visually-hidden" id="announcer" role="status" aria-live="polite"></p>
+
+          <!-- Admission ticket: shown after a successful registration -->
+          <div class="ticket-slot">
+            <article class="ticket" id="ticket" hidden tabindex="-1" aria-labelledby="ticket-title">
+              <header class="ticket-head">
+                <div>
+                  <p class="ticket-kind">Admission</p>
+                  <h3 id="ticket-title">See you there</h3>
+                </div>
+                <p class="stamp" aria-hidden="true">Registered</p>
+              </header>
+              <dl class="ticket-grid">
+                <div class="ticket-wide"><dt>Event</dt><dd id="t-event"></dd></div>
+                <div><dt>Date</dt><dd id="t-date"></dd></div>
+                <div><dt>Time</dt><dd id="t-time"></dd></div>
+                <div class="ticket-wide"><dt>Venue</dt><dd id="t-venue"></dd></div>
+                <div class="ticket-wide"><dt>Name</dt><dd id="t-name"></dd></div>
+              </dl>
+              <div class="ticket-stub">
+                <div>
+                  <p class="stub-label">Seat</p>
+                  <p class="stub-seat" id="t-seat"></p>
+                </div>
+                <div class="stub-code">
+                  <div class="barcode" id="t-barcode" role="img" aria-label="Barcode"></div>
+                  <p id="t-code"></p>
+                </div>
+              </div>
+              <footer class="ticket-foot">
+                <p>Show this code at the door. It is also listed under Attendees.</p>
+                <button type="button" class="btn btn-quiet" id="ticket-again">Register someone else</button>
+              </footer>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Organizer view -->
+    <section id="attendees" class="attendees" aria-labelledby="attendees-title">
+      <div class="attendees-head">
+        <div>
+          <h2 id="attendees-title">Attendees</h2>
+          <p class="attendees-note">For organizers. In this prototype the list is open to everyone; the production build puts it behind an admin sign-in.</p>
+        </div>
+        <div class="attendees-tools">
+          <div class="field field-inline">
+            <label for="attendee-event">Event</label>
+            <select id="attendee-event" aria-label="Show attendees for event"></select>
+          </div>
+          <div class="field field-inline">
+            <label for="attendee-search">Search</label>
+            <input id="attendee-search" type="search" placeholder="Name or email" aria-label="Search attendees by name or email">
+          </div>
+          <button type="button" class="btn btn-quiet" id="export-csv">Download CSV</button>
+        </div>
+      </div>
+
+      <p class="attendee-summary" id="attendee-summary" role="status" aria-live="polite"></p>
+
+      <div class="table-wrap" role="region" aria-labelledby="attendee-caption" tabindex="0">
+        <table class="table">
+          <caption class="visually-hidden" id="attendee-caption">Registered attendees</caption>
+          <thead>
+            <tr>
+              <th scope="col">Seat</th>
+              <th scope="col">Name</th>
+              <th scope="col">Student number</th>
+              <th scope="col">Email</th>
+              <th scope="col">Program</th>
+              <th scope="col">Registered</th>
+              <th scope="col">Code</th>
+            </tr>
+          </thead>
+          <tbody id="attendee-rows"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="attendee-empty" hidden>No matches. Clear the search to see everyone registered for this event.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Kalendaryo is a prototype for the Online Campus Event Management System laboratory.</p>
+    <p>Built with semantic HTML, vanilla JavaScript and no frameworks.</p>
+  </footer>
+
+  <!-- Event row template. app.js clones this for every event. -->
+  <template id="event-template">
+    <li>
+      <article class="event">
+        <time class="event-date">
+          <span class="event-month"></span>
+          <span class="event-day"></span>
+          <span class="event-weekday"></span>
+        </time>
+        <img class="event-art" src="" alt="" width="64" height="64" loading="lazy">
+        <div class="event-body">
+          <p class="event-category"></p>
+          <h3 class="event-title"></h3>
+          <p class="event-meta"></p>
+          <p class="event-desc"></p>
+        </div>
+        <div class="event-side">
+          <div class="seat-meter" aria-hidden="true"></div>
+          <p class="seat-count"></p>
+          <button type="button" class="btn btn-line event-register">Register</button>
+        </div>
+      </article>
+    </li>
+  </template>
+
+  <noscript><p class="noscript">Turn on JavaScript to load the event catalog and registration form.</p></noscript>
+
+  <script src="js/validation.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
