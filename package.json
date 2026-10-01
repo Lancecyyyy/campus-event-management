@@ -1,0 +1,11 @@
+{
+  "name": "campus-event-management",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kalendaryo: Online Campus Event Management System prototype (laboratory midterm)",
+  "scripts": {
+    "test": "node --test tests/frontend/validation.test.js",
+    "start": "npx --yes http-server frontend -p 5173 -c-1"
+  },
+  "engines": { "node": ">=18" }
+}
